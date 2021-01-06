@@ -11,6 +11,7 @@ import pl.nikodem.patientregistrationsystem.repository.DoctorRepository;
 import pl.nikodem.patientregistrationsystem.repository.PatientRepository;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Component
 public class DataLoader implements ApplicationRunner {
@@ -27,7 +28,11 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        doctorRepository.save(new Doctor(1, "jankowalski123", passwordEncoder.encode("password"), "ROLE_DOCTOR", Instant.now()));
+        Doctor doctor = new Doctor(1, "jankowalski123", passwordEncoder.encode("password"), "ROLE_DOCTOR", Instant.now());
+        doctor.setBirthDate(LocalDate.of(1980, 3, 22));
+        doctor.setFirstName("Jan");
+        doctor.setLastName("Kowalski");
+        doctorRepository.save(doctor);
         patientRepository.save(new Patient(1, "pawelnowak11", passwordEncoder.encode("haslo"), "ROLE_PATIENT", Instant.now()));
     }
 }
