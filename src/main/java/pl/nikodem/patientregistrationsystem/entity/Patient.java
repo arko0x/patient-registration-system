@@ -7,17 +7,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SecondaryTable(name = "patient_details")
 public class Patient implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +29,15 @@ public class Patient implements UserDetails {
     private String role;
 
     private Instant createdAt;
+
+    @Column(table = "patient_details")
+    private String firstName;
+
+    @Column(table = "patient_details")
+    private String lastName;
+
+    @Column(table = "patient_details")
+    private LocalDate birthDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
