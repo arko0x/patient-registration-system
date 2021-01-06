@@ -9,12 +9,15 @@ import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SecondaryTable(name = "doctor_details")
 public class Doctor implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,30 @@ public class Doctor implements UserDetails {
     private String role;
 
     private Instant createdAt;
+
+    @Column(table = "doctor_details")
+    private String firstName;
+
+    @Column(table = "doctor_details")
+    private String lastName;
+
+    @Column(table = "doctor_details")
+    private LocalDate birthDate;
+
+    @ManyToMany
+    @JoinTable(name = "doctor_specialization",
+    joinColumns = @JoinColumn(name = "doctor_id"),
+    inverseJoinColumns = @JoinColumn(name = "specialization_id"))
+    private List<Specialization> specializations;
+
+
+    public Doctor(long id, String username, String password, String role, Instant createdAt) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.createdAt = createdAt;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
