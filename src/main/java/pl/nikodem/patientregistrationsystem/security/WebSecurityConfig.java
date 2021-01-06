@@ -32,9 +32,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/doctor/**").hasRole(DOCTOR.name())
                 .antMatchers("/patient/**").hasRole(PATIENT.name())
                 .and()
                 .formLogin();
+
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 }
