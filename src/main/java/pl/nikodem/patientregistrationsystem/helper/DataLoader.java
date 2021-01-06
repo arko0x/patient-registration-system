@@ -16,6 +16,7 @@ import pl.nikodem.patientregistrationsystem.repository.SpecializationRepository;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +49,9 @@ public class DataLoader implements ApplicationRunner {
 
         specializationRepository.saveAll(specializations);
         doctorRepository.save(doctor);
-        patientRepository.save(new Patient(1, "pawelnowak11", passwordEncoder.encode("haslo"), "ROLE_PATIENT", Instant.now()));
+
+        Patient patient = new Patient(1, "pawelnowak11", passwordEncoder.encode("haslo"), "ROLE_PATIENT", Instant.now(),
+                "Paweł", "Nowak", LocalDate.of(1980, Month.APRIL, 1));
+        patientRepository.save(patient);
     }
 }
