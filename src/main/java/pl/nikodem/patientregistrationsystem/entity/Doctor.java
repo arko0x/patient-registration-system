@@ -10,6 +10,7 @@ import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -46,6 +47,9 @@ public class Doctor implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "specialization_id"))
     private List<Specialization> specializations;
 
+    @OneToMany(mappedBy = "doctor")
+    private List<Appointment> appointments;
+
 
     public Doctor(long id, String username, String password, String role, Instant createdAt) {
         this.id = id;
@@ -53,6 +57,7 @@ public class Doctor implements UserDetails {
         this.password = password;
         this.role = role;
         this.createdAt = createdAt;
+        this.appointments = new ArrayList<>();
     }
 
     @Override
@@ -77,6 +82,15 @@ public class Doctor implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        return true;
+    }
+
+    public void addAppointment(Appointment appointment) {
+        appointments.add(appointment);
+    }
+
+    public boolean hasAvailableDate(Instant date) {
+        // to implement later
         return true;
     }
 }

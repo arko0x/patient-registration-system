@@ -10,7 +10,9 @@ import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -39,6 +41,21 @@ public class Patient implements UserDetails {
     @Column(table = "patient_details")
     private LocalDate birthDate;
 
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> appointments;
+
+    public Patient(long id, String username, String password, String role, Instant createdAt, String firstName, String lastName, LocalDate birthDate) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.appointments = new ArrayList<>();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return ApplicationUserRole.PATIENT.getAuthorities();
@@ -62,5 +79,10 @@ public class Patient implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addAppointment(Appointment appointment, Doctor doctor) {
+        appointments.add(appointment);
+        doctor.addAppointment(appointment);
     }
 }
