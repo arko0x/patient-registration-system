@@ -6,10 +6,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.nikodem.patientregistrationsystem.entity.Doctor;
-import pl.nikodem.patientregistrationsystem.entity.Patient;
-import pl.nikodem.patientregistrationsystem.entity.Specialization;
-import pl.nikodem.patientregistrationsystem.entity.SpecializationType;
+import pl.nikodem.patientregistrationsystem.entity.*;
+import pl.nikodem.patientregistrationsystem.repository.AppointmentRepository;
 import pl.nikodem.patientregistrationsystem.repository.DoctorRepository;
 import pl.nikodem.patientregistrationsystem.repository.PatientRepository;
 import pl.nikodem.patientregistrationsystem.repository.SpecializationRepository;
@@ -26,14 +24,16 @@ public class DataLoader implements ApplicationRunner {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final SpecializationRepository specializationRepository;
+    private final AppointmentRepository appointmentRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataLoader(DoctorRepository doctorRepository, PatientRepository patientRepository, SpecializationRepository specializationRepository, PasswordEncoder passwordEncoder) {
+    public DataLoader(DoctorRepository doctorRepository, PatientRepository patientRepository, SpecializationRepository specializationRepository, AppointmentRepository appointmentRepository, PasswordEncoder passwordEncoder) {
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.specializationRepository = specializationRepository;
         this.passwordEncoder = passwordEncoder;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @Override
@@ -53,5 +53,9 @@ public class DataLoader implements ApplicationRunner {
         Patient patient = new Patient(1, "pawelnowak11", passwordEncoder.encode("haslo"), "ROLE_PATIENT", Instant.now(),
                 "Paweł", "Nowak", LocalDate.of(1980, Month.APRIL, 1));
         patientRepository.save(patient);
+
+        Appointment appointment = new Appointment(1, doctor, patient, Instant.parse("2021-12-03T10:15:30.00Z"));
+        appointmentRepository.save(appointment);
+        patient.addAppointment(appointment, doctor);
     }
 }
