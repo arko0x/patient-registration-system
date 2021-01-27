@@ -5,14 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.nikodem.patientregistrationsystem.helper.WorkingHours;
 import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 
 import javax.persistence.*;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
 @Entity
 @Data
@@ -43,13 +41,30 @@ public class Doctor implements UserDetails {
 
     @ManyToMany
     @JoinTable(name = "doctor_specialization",
-    joinColumns = @JoinColumn(name = "doctor_id"),
-    inverseJoinColumns = @JoinColumn(name = "specialization_id"))
+            joinColumns = @JoinColumn(name = "doctor_id"),
+            inverseJoinColumns = @JoinColumn(name = "specialization_id"))
     private List<Specialization> specializations;
 
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments;
 
+    @Transient
+    private Set<DayOfWeek> defaultWorkingDays;
+
+    @Transient
+    private Map<LocalDate, List<WorkingHours>> dateAvailableHoursMap;
+
+    @Transient
+    private LocalTime defaultWorkStartTime;
+
+    @Transient
+    private LocalTime defaultWorkEndTime;
+
+    @Transient
+    private long defaultMeetingTime;
+
+    @Transient
+    private boolean setDefaultWorkingTimeForNextDay;
 
     public Doctor(long id, String username, String password, String role, Instant createdAt) {
         this.id = id;
@@ -90,7 +105,20 @@ public class Doctor implements UserDetails {
     }
 
     public boolean hasAvailableDate(Instant date) {
-        // to implement later
-        return true;
+        List<WorkingHours> availableTimeIntervalsAtGivenDay = dateAvailableHoursMap.getOrDefault(LocalDate.ofInstant(date, ZoneId.systemDefault()), null);
+
+        if (availableTimeIntervalsAtGivenDay != null) {
+            if (availableTimeIntervalsAtGivenDay.stream().anyMatch(e -> e.containsBetweenStartHourAndEndHour(date)))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean addDayAvailableHours(LocalDate date, List<WorkingHours> workingHoursList) {
+        if (!dateAvailableHoursMap.containsKey(date)) {
+            dateAvailableHoursMap.put(date, workingHoursList);
+            return true;
+        } else
+            return false;
     }
 }
