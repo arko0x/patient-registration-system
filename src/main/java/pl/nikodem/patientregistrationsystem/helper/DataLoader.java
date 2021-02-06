@@ -50,7 +50,7 @@ public class DataLoader implements ApplicationRunner {
         specializationRepository.saveAll(specializations);
         doctorRepository.save(doctor);
 
-        Patient patient = new Patient(1, "pawelnowak11", passwordEncoder.encode("haslo"), "ROLE_PATIENT", Instant.now(),
+        Patient patient = new Patient("pawelnowak11", passwordEncoder.encode("haslo"), "pawel123@gmail.com", "ROLE_PATIENT", Instant.now(),
                 "Paweł", "Nowak", LocalDate.of(1980, Month.APRIL, 1));
         patientRepository.save(patient);
 

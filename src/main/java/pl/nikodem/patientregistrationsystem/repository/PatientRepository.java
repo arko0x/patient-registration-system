@@ -7,4 +7,5 @@ import pl.nikodem.patientregistrationsystem.entity.Patient;
 @Repository
 public interface PatientRepository extends CrudRepository<Patient, Long> {
     Patient findByUsername(String username);
+    Patient findPatientByEmail(String email);
 }

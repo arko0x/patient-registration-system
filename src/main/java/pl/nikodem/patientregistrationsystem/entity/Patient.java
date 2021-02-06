@@ -3,11 +3,16 @@ package pl.nikodem.patientregistrationsystem.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,30 +29,44 @@ public class Patient implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank
+    @Pattern(regexp = "^[^ ]+$", message = "Username can't contain any whitespaces")
     private String username;
 
+    @NotBlank
+    @Email
+    private String email;
+
+    @NotNull
     private String password;
 
+    @NotBlank
     private String role;
 
     private Instant createdAt;
 
     @Column(table = "patient_details")
+    @NotBlank
+    @Pattern(regexp = "^[^ ]+$", message = "First name can't contain any whitespaces")
     private String firstName;
 
     @Column(table = "patient_details")
+    @NotBlank
     private String lastName;
 
     @Column(table = "patient_details")
+    @NotNull
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
 
-    public Patient(long id, String username, String password, String role, Instant createdAt, String firstName, String lastName, LocalDate birthDate) {
-        this.id = id;
+    private boolean enabled;
+
+    public Patient(String username, String password, String email, String role, Instant createdAt, String firstName, String lastName, LocalDate birthDate) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
         this.createdAt = createdAt;
         this.firstName = firstName;

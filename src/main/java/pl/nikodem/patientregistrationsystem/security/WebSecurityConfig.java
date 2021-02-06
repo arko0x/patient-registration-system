@@ -31,10 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/patient/register").anonymous()
                 .antMatchers("/doctor/**").hasRole(DOCTOR.name())
                 .antMatchers("/patient/**").hasRole(PATIENT.name())
+                .antMatchers("/").permitAll()
                 .and()
                 .formLogin();
 
