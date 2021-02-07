@@ -1,16 +1,14 @@
 package pl.nikodem.patientregistrationsystem.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.nikodem.patientregistrationsystem.service.PatientService;
+import pl.nikodem.patientregistrationsystem.patient.PatientService;
 
 @Component
 public class PatientAuthenticationProvider implements AuthenticationProvider {
@@ -32,8 +30,15 @@ public class PatientAuthenticationProvider implements AuthenticationProvider {
 
         if (patient != null) {
             if (passwordEncoder.matches(password, patient.getPassword()))
-                return new UsernamePasswordAuthenticationToken(username, password, ApplicationUserRole.PATIENT.getAuthorities());
-            else throw new BadCredentialsException("Incorrect password for user " + patient.getUsername());
+                if (patient.isEnabled() && patient.isAccountNonLocked()) {
+                    return new UsernamePasswordAuthenticationToken(username, password, ApplicationUserRole.PATIENT.getAuthorities());
+                }
+                else if (!patient.isEnabled())
+                    throw new DisabledException("User account is disabled");
+                else
+                    throw new LockedException("User account is locked");
+            else
+                throw new BadCredentialsException("Incorrect password for user " + patient.getUsername());
         }
         else throw new UsernameNotFoundException("Username " + username + " not found");
     }
