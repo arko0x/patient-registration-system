@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/patient/register").anonymous()
+                .antMatchers("/patient/register", "/patient/register/**").anonymous()
                 .antMatchers("/doctor/**").hasRole(DOCTOR.name())
                 .antMatchers("/patient/**").hasRole(PATIENT.name())
                 .antMatchers("/").permitAll()
