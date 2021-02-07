@@ -1,9 +1,7 @@
-package pl.nikodem.patientregistrationsystem.registration;
+package pl.nikodem.patientregistrationsystem.patient.registration;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.nikodem.patientregistrationsystem.entity.Patient;
+import pl.nikodem.patientregistrationsystem.patient.Patient;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;

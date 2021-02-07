@@ -1,17 +1,11 @@
-package pl.nikodem.patientregistrationsystem.controller;
+package pl.nikodem.patientregistrationsystem.patient.registration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.nikodem.patientregistrationsystem.exceptions.EmailAlreadyExistsException;
-import pl.nikodem.patientregistrationsystem.exceptions.UsernameAlreadyExistsException;
-import pl.nikodem.patientregistrationsystem.registration.PatientRegistrationDTO;
-import pl.nikodem.patientregistrationsystem.service.PatientRegistrationService;
+import org.springframework.web.bind.annotation.*;
+import pl.nikodem.patientregistrationsystem.exceptions.*;
 
 import javax.validation.Valid;
 
@@ -43,4 +37,18 @@ public class PatientRegistrationController {
         }
     }
 
+    @GetMapping("/register/confirm")
+    public ResponseEntity<String> confirmToken(@RequestParam String token) {
+        String message;
+        try {
+            message = patientRegistrationService.confirmToken(token);
+        } catch (TokenNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (EmailAlreadyConfirmedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (TokenExpiredException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.EXPECTATION_FAILED);
+        }
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 }
