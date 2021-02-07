@@ -1,13 +1,10 @@
-package pl.nikodem.patientregistrationsystem.service;
+package pl.nikodem.patientregistrationsystem.patient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pl.nikodem.patientregistrationsystem.entity.Doctor;
-import pl.nikodem.patientregistrationsystem.entity.Patient;
-import pl.nikodem.patientregistrationsystem.repository.PatientRepository;
 
 @Service
 public class PatientService implements UserDetailsService {
@@ -23,12 +20,15 @@ public class PatientService implements UserDetailsService {
         return patientRepository.findByUsername(username);
     }
 
-    public boolean savePatient(Patient patient) {
+    public void savePatient(Patient patient) {
         patientRepository.save(patient);
-        return true;
     }
 
     public Patient findUserByEmail(String email) {
         return patientRepository.findPatientByEmail(email);
+    }
+
+    public void enablePatient(String email) {
+        patientRepository.enablePatient(email);
     }
 }
