@@ -31,7 +31,7 @@ public class PatientRegistrationService {
             return true;
     }
 
-    public String register(PatientRegistrationDTO patient) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+    public void register(PatientRegistrationDTO patient) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         if (canPatientBeRegistered(patient)) {
             patient.setCreatedAt(Instant.now());
             patient.setPassword(passwordEncoder.encode(patient.getPassword()));
@@ -51,9 +51,7 @@ public class PatientRegistrationService {
 
             emailSender.send(patientToSave.getEmail(), ConfirmationEmailGenerator.generateEmailMessage(patient.getUsername(), token));
 
-            return token;
         }
-        return null;
     }
 
     @Transactional
