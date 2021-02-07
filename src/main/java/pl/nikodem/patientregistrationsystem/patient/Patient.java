@@ -1,11 +1,12 @@
-package pl.nikodem.patientregistrationsystem.entity;
+package pl.nikodem.patientregistrationsystem.patient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.nikodem.patientregistrationsystem.appointments.Appointment;
+import pl.nikodem.patientregistrationsystem.doctor.Doctor;
 import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 
 import javax.persistence.*;
@@ -61,7 +62,8 @@ public class Patient implements UserDetails {
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
 
-    private boolean enabled;
+    private boolean enabled = false;
+    private boolean locked = false;
 
     public Patient(String username, String password, String email, String role, Instant createdAt, String firstName, String lastName, LocalDate birthDate) {
         this.username = username;
@@ -87,7 +89,7 @@ public class Patient implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -97,7 +99,7 @@ public class Patient implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public void addAppointment(Appointment appointment, Doctor doctor) {
