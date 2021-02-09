@@ -17,7 +17,9 @@ public class PatientService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return patientRepository.findByUsername(username);
+        UserDetails user = patientRepository.findByUsername(username);
+        if (user != null) return user;
+        else throw new UsernameNotFoundException("Username " + username + " not found");
     }
 
     public void savePatient(Patient patient) {
