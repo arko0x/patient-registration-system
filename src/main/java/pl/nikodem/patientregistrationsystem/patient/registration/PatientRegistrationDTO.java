@@ -1,5 +1,6 @@
 package pl.nikodem.patientregistrationsystem.patient.registration;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import pl.nikodem.patientregistrationsystem.patient.Patient;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.time.LocalDate;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 @Data
 public class PatientRegistrationDTO {
@@ -40,6 +42,7 @@ public class PatientRegistrationDTO {
 
     @Column(table = "patient_details")
     @NotNull
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDate birthDate;
 
     public Patient toPatient() {
