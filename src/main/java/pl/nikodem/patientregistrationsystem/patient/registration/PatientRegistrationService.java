@@ -1,6 +1,7 @@
 package pl.nikodem.patientregistrationsystem.patient.registration;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +24,14 @@ public class PatientRegistrationService {
     private final EmailSender emailSender;
 
     private boolean canPatientBeRegistered(PatientRegistrationDTO patient) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        if (patientService.loadUserByUsername(patient.getUsername()) != null)
+        try {
+            patientService.loadUserByUsername(patient.getUsername());
             throw new UsernameAlreadyExistsException();
-        else if (patientService.findUserByEmail(patient.getEmail()) != null)
-            throw new EmailAlreadyExistsException();
-        else
-            return true;
+        }
+        catch (UsernameNotFoundException ignored) {}
+
+        if (patientService.findUserByEmail(patient.getEmail()) != null) throw new EmailAlreadyExistsException();
+        else return true;
     }
 
     public void register(PatientRegistrationDTO patient) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
