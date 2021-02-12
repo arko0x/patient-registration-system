@@ -14,6 +14,6 @@ public interface DoctorRepository extends CrudRepository<Doctor, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE Doctor d SET d.enabled = true")
+    @Query(value = "UPDATE Doctor d SET d.enabled = true WHERE d.email = ?1")
     void enableDoctor(String email);
 }
