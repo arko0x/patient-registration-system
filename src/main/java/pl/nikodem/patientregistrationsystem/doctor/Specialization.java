@@ -1,4 +1,4 @@
-package pl.nikodem.patientregistrationsystem.entity;
+package pl.nikodem.patientregistrationsystem.doctor;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

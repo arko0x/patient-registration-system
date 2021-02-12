@@ -1,4 +1,4 @@
-package pl.nikodem.patientregistrationsystem.entity;
+package pl.nikodem.patientregistrationsystem.doctor;
 
 public enum SpecializationType {
     ALLERGY_AND_IMMUNOLOGY("Allergy and Immunology"),
@@ -25,7 +25,7 @@ public enum SpecializationType {
 
     String name;
 
-    private SpecializationType(String name) {
+    SpecializationType(String name) {
         this.name = name;
     }
 }

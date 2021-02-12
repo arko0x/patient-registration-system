@@ -1,8 +1,10 @@
-package pl.nikodem.patientregistrationsystem.entity;
+package pl.nikodem.patientregistrationsystem.appointments;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.nikodem.patientregistrationsystem.doctor.Doctor;
+import pl.nikodem.patientregistrationsystem.patient.Patient;
 
 import javax.persistence.*;
 import java.time.Instant;

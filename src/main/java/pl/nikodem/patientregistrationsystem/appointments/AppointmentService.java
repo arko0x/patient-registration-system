@@ -1,12 +1,12 @@
-package pl.nikodem.patientregistrationsystem.service;
+package pl.nikodem.patientregistrationsystem.appointments;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.nikodem.patientregistrationsystem.entity.Appointment;
-import pl.nikodem.patientregistrationsystem.entity.Doctor;
-import pl.nikodem.patientregistrationsystem.entity.Patient;
+import pl.nikodem.patientregistrationsystem.appointments.Appointment;
+import pl.nikodem.patientregistrationsystem.doctor.Doctor;
+import pl.nikodem.patientregistrationsystem.patient.Patient;
 import pl.nikodem.patientregistrationsystem.exceptions.AppointmentDateNotAvailableException;
-import pl.nikodem.patientregistrationsystem.repository.AppointmentRepository;
+import pl.nikodem.patientregistrationsystem.appointments.AppointmentRepository;
 
 import java.time.Instant;
 

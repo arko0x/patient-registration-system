@@ -1,4 +1,4 @@
-package pl.nikodem.patientregistrationsystem.helper;
+package pl.nikodem.patientregistrationsystem.doctor;
 
 import java.time.Instant;
 import java.time.LocalTime;
