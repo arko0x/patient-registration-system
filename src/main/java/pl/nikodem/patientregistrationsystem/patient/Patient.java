@@ -1,5 +1,6 @@
 package pl.nikodem.patientregistrationsystem.patient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,6 +61,7 @@ public class Patient implements UserDetails {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "patient")
+    @JsonBackReference
     private List<Appointment> appointments;
 
     private boolean enabled = false;

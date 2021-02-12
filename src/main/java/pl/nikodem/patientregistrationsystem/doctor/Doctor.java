@@ -1,5 +1,7 @@
 package pl.nikodem.patientregistrationsystem.doctor;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,9 +47,11 @@ public class Doctor implements UserDetails {
     @JoinTable(name = "doctor_specialization",
             joinColumns = @JoinColumn(name = "doctor_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id"))
+    @JsonBackReference
     private List<Specialization> specializations;
 
     @OneToMany(mappedBy = "doctor")
+    @JsonBackReference
     private List<Appointment> appointments;
 
     private boolean enabled = false;

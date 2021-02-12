@@ -1,5 +1,7 @@
 package pl.nikodem.patientregistrationsystem.appointments;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +21,11 @@ public class Appointment {
     private long id;
 
     @ManyToOne
+    @JsonManagedReference
     private Doctor doctor;
 
     @ManyToOne
+    @JsonManagedReference
     private Patient patient;
 
     private Instant date;
