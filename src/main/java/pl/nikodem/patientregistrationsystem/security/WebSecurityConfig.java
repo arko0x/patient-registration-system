@@ -33,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/patient/register", "/patient/register/**").anonymous()
+                .antMatchers("/doctor/register", "/doctor/register/**").anonymous()
                 .antMatchers("/doctor/**").hasRole(DOCTOR.name())
                 .antMatchers("/patient/**").hasRole(PATIENT.name())
                 .antMatchers("/").permitAll()

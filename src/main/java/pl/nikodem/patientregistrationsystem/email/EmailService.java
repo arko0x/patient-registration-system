@@ -1,4 +1,4 @@
-package pl.nikodem.patientregistrationsystem.patient.registration.email;
+package pl.nikodem.patientregistrationsystem.email;
 
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

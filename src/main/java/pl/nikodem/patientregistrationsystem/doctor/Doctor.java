@@ -1,11 +1,11 @@
-package pl.nikodem.patientregistrationsystem.entity;
+package pl.nikodem.patientregistrationsystem.doctor;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.nikodem.patientregistrationsystem.helper.WorkingHours;
+import pl.nikodem.patientregistrationsystem.appointments.Appointment;
 import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 
 import javax.persistence.*;
@@ -23,6 +23,8 @@ public class Doctor implements UserDetails {
     private long id;
 
     private String username;
+
+    private String email;
 
     private String password;
 
@@ -47,6 +49,9 @@ public class Doctor implements UserDetails {
 
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments;
+
+    private boolean enabled = false;
+    private boolean locked = false;
 
     @Transient
     private Set<DayOfWeek> defaultWorkingDays;
@@ -73,6 +78,18 @@ public class Doctor implements UserDetails {
         this.role = role;
         this.createdAt = createdAt;
         this.appointments = new ArrayList<>();
+    }
+
+    public Doctor(String username, String email, String password, String role, Instant createdAt, String firstName, String lastName, LocalDate birthDate, List<Specialization> specializations) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.specializations = specializations;
     }
 
     @Override
