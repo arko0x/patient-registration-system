@@ -57,23 +57,27 @@ public class Doctor implements UserDetails {
     private boolean enabled = false;
     private boolean locked = false;
 
-    @Transient
-    private Set<DayOfWeek> defaultWorkingDays;
+//    @Transient
+//    private Set<DayOfWeek> defaultWorkingDays;
+//
+//    @Transient
+//    private Map<LocalDate, List<WorkingHours>> dateAvailableHoursMap;
+//
+//    @Transient
+//    private LocalTime defaultWorkStartTime;
+//
+//    @Transient
+//    private LocalTime defaultWorkEndTime;
+//
+//    @Transient
+//    private long defaultMeetingTime;
+//
+//    @Transient
+//    private boolean setDefaultWorkingTimeForNextDay;
 
-    @Transient
-    private Map<LocalDate, List<WorkingHours>> dateAvailableHoursMap;
-
-    @Transient
-    private LocalTime defaultWorkStartTime;
-
-    @Transient
-    private LocalTime defaultWorkEndTime;
-
-    @Transient
-    private long defaultMeetingTime;
-
-    @Transient
-    private boolean setDefaultWorkingTimeForNextDay;
+    @OneToMany(mappedBy = "doctor")
+    @JsonBackReference
+    private List<MeetingInterval> meetingIntervals;
 
     public Doctor(long id, String username, String password, String role, Instant createdAt) {
         this.id = id;
@@ -123,23 +127,5 @@ public class Doctor implements UserDetails {
 
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
-    }
-
-    public boolean hasAvailableDate(Instant date) {
-        List<WorkingHours> availableTimeIntervalsAtGivenDay = dateAvailableHoursMap.getOrDefault(LocalDate.ofInstant(date, ZoneId.systemDefault()), null);
-
-        if (availableTimeIntervalsAtGivenDay != null) {
-            if (availableTimeIntervalsAtGivenDay.stream().anyMatch(e -> e.containsBetweenStartHourAndEndHour(date)))
-                return true;
-        }
-        return false;
-    }
-
-    public boolean addDayAvailableHours(LocalDate date, List<WorkingHours> workingHoursList) {
-        if (!dateAvailableHoursMap.containsKey(date)) {
-            dateAvailableHoursMap.put(date, workingHoursList);
-            return true;
-        } else
-            return false;
     }
 }
