@@ -6,11 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.nikodem.patientregistrationsystem.exceptions.*;
 import pl.nikodem.patientregistrationsystem.patient.Patient;
 import pl.nikodem.patientregistrationsystem.patient.PatientService;
-import pl.nikodem.patientregistrationsystem.patient.registration.email.EmailSender;
+import pl.nikodem.patientregistrationsystem.email.EmailSender;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -35,7 +36,7 @@ public class PatientRegistrationServiceTest {
     private EmailSender emailSender;
 
     @InjectMocks
-    private PatientRegistrationService patientRegistrationService;
+    private PatientRegistrationServiceImpl patientRegistrationService;
 
     private PatientRegistrationDTO testPatient;
 
@@ -54,7 +55,7 @@ public class PatientRegistrationServiceTest {
 
     @Test
     public void givenRegisterMethodWhenRegisterUserIsNewThenRegisterUserCorrectly() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
-        when(patientService.loadUserByUsername(any(String.class))).thenReturn(null);
+        when(patientService.loadUserByUsername(any(String.class))).thenThrow(UsernameNotFoundException.class);
         assertDoesNotThrow(() -> patientRegistrationService.register(testPatient));
     }
 
@@ -67,6 +68,7 @@ public class PatientRegistrationServiceTest {
     @Test
     public void givenRegisterMethodWhenRegisterEmailAlreadyExistsThenThrowAnEmailAlreadyExistsException() {
         when(patientService.findUserByEmail(any(String.class))).thenReturn(new Patient());
+        when(patientService.loadUserByUsername(any(String.class))).thenThrow(UsernameNotFoundException.class);
         assertThrows(EmailAlreadyExistsException.class, () -> patientRegistrationService.register(testPatient));
     }
 
