@@ -1,13 +1,13 @@
 package pl.nikodem.patientregistrationsystem.patient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.nikodem.patientregistrationsystem.appointments.Appointment;
-import pl.nikodem.patientregistrationsystem.doctor.Doctor;
 import pl.nikodem.patientregistrationsystem.security.ApplicationUserRole;
 
 import javax.persistence.*;
@@ -61,7 +61,7 @@ public class Patient implements UserDetails {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "patient")
-    @JsonBackReference
+    @JsonManagedReference
     private List<Appointment> appointments;
 
     private boolean enabled = false;
