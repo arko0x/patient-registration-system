@@ -52,32 +52,14 @@ public class Doctor implements UserDetails {
 
     @OneToMany(mappedBy = "doctor")
     @JsonBackReference
-    private List<Appointment> appointments;
+    private List<Appointment> appointments = new ArrayList<>();
 
     private boolean enabled = false;
     private boolean locked = false;
 
-//    @Transient
-//    private Set<DayOfWeek> defaultWorkingDays;
-//
-//    @Transient
-//    private Map<LocalDate, List<WorkingHours>> dateAvailableHoursMap;
-//
-//    @Transient
-//    private LocalTime defaultWorkStartTime;
-//
-//    @Transient
-//    private LocalTime defaultWorkEndTime;
-//
-//    @Transient
-//    private long defaultMeetingTime;
-//
-//    @Transient
-//    private boolean setDefaultWorkingTimeForNextDay;
-
     @OneToMany(mappedBy = "doctor")
     @JsonBackReference
-    private List<MeetingInterval> meetingIntervals;
+    private List<MeetingInterval> meetingIntervals = new ArrayList<>();
 
     public Doctor(long id, String username, String password, String role, Instant createdAt) {
         this.id = id;
@@ -85,7 +67,6 @@ public class Doctor implements UserDetails {
         this.password = password;
         this.role = role;
         this.createdAt = createdAt;
-        this.appointments = new ArrayList<>();
     }
 
     public Doctor(String username, String email, String password, String role, Instant createdAt, String firstName, String lastName, LocalDate birthDate, List<Specialization> specializations) {
@@ -125,7 +106,7 @@ public class Doctor implements UserDetails {
         return true;
     }
 
-    public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
+    public boolean hasAvailableMeetingInterval(MeetingInterval meetingInterval) {
+        return meetingIntervals.contains(meetingInterval);
     }
 }
