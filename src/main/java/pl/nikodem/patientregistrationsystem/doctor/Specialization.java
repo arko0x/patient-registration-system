@@ -1,6 +1,5 @@
 package pl.nikodem.patientregistrationsystem.doctor;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +17,6 @@ public class Specialization {
     private String name;
 
     @ManyToMany(mappedBy = "specializations")
-    @JsonManagedReference
     private List<Doctor> doctors;
 
     public Specialization(SpecializationType type) {

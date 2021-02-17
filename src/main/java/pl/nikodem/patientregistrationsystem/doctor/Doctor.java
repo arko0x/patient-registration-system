@@ -1,7 +1,7 @@
 package pl.nikodem.patientregistrationsystem.doctor;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,18 +47,18 @@ public class Doctor implements UserDetails {
     @JoinTable(name = "doctor_specialization",
             joinColumns = @JoinColumn(name = "doctor_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id"))
-    @JsonBackReference
+    @JsonBackReference(value = "doctor-specialization")
     private List<Specialization> specializations;
 
     @OneToMany(mappedBy = "doctor")
-    @JsonBackReference
+    @JsonManagedReference(value = "doctor-appointment")
     private List<Appointment> appointments = new ArrayList<>();
 
     private boolean enabled = false;
     private boolean locked = false;
 
     @OneToMany(mappedBy = "doctor")
-    @JsonBackReference
+    @JsonManagedReference(value = "doctor-meetingInterval")
     private List<MeetingInterval> meetingIntervals = new ArrayList<>();
 
     public Doctor(long id, String username, String password, String role, Instant createdAt) {

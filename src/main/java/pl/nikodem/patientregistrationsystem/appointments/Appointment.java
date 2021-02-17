@@ -1,6 +1,6 @@
 package pl.nikodem.patientregistrationsystem.appointments;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,11 +20,11 @@ public class Appointment {
     private long id;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference(value = "doctor-appointment")
     private Doctor doctor;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference
     private Patient patient;
 
     private LocalDateTime date;

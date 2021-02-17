@@ -1,6 +1,6 @@
 package pl.nikodem.patientregistrationsystem.doctor;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +22,7 @@ public class MeetingInterval {
     private LocalTime endTime;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference(value = "doctor-meetingInterval")
     private Doctor doctor;
 
     public MeetingInterval(LocalDate date, LocalTime startTime, LocalTime endTime, Doctor doctor) {
