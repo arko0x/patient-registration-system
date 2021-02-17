@@ -5,6 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import pl.nikodem.patientregistrationsystem.exceptions.DoctorNotFoundException;
+
+import java.util.Optional;
 
 @Service
 public class DoctorService implements UserDetailsService {
@@ -32,5 +35,11 @@ public class DoctorService implements UserDetailsService {
 
     public void enableDoctor(String email) {
         doctorRepository.enableDoctor(email);
+    }
+
+    public Doctor findById(long doctorId) throws DoctorNotFoundException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
+        if (doctorOptional.isPresent()) return doctorOptional.get();
+        else throw new DoctorNotFoundException("Doctor with id " + doctorId + " not found");
     }
 }
