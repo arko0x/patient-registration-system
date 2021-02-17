@@ -16,7 +16,7 @@ class PatientServiceTest {
     private PatientRepository patientRepository;
 
     @InjectMocks
-    private PatientService patientService;
+    private PatientServiceImpl patientService;
 
     @Test
     void givenLoadUserByUsernameWhenUsernameNotFoundThenThrowUsernameNotFoundException() {
