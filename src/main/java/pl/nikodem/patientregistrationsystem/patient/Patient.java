@@ -103,9 +103,4 @@ public class Patient implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
-
-    public void addAppointment(Appointment appointment, Doctor doctor) {
-        appointments.add(appointment);
-        doctor.addAppointment(appointment);
-    }
 }
