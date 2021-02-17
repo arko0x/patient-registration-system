@@ -6,10 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.nikodem.patientregistrationsystem.doctor.Doctor;
 import pl.nikodem.patientregistrationsystem.doctor.DoctorService;
 import pl.nikodem.patientregistrationsystem.doctor.MeetingInterval;
@@ -74,6 +71,20 @@ public class AppointmentController {
             return new ResponseEntity<>(appointment, HttpStatus.CREATED);
         } catch (AppointmentTimeUnavailableException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @DeleteMapping("/doctor/deleteappointment")
+    public ResponseEntity<String> proceedDeletingAppointment(@RequestParam(name = "appointment_id") long id, Principal principal) {
+        if (appointmentService.findById(id).isPresent() && !appointmentService.findById(id).get().getDoctor().getUsername().equals(principal.getName())) {
+            return new ResponseEntity<>("Operation forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        if (appointmentService.deleteAppointmentById(id)) {
+            return new ResponseEntity<>("Correctly deleted appointment", HttpStatus.ACCEPTED);
+        }
+        else {
+            return new ResponseEntity<>("Appointment not exists", HttpStatus.NOT_FOUND);
         }
     }
 }

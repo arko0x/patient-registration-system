@@ -9,6 +9,7 @@ import pl.nikodem.patientregistrationsystem.exceptions.AppointmentTimeUnavailabl
 import pl.nikodem.patientregistrationsystem.patient.Patient;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class AppointmentService {
@@ -30,5 +31,18 @@ public class AppointmentService {
             return appointment;
         }
         else throw new AppointmentTimeUnavailableException();
+    }
+
+    public boolean deleteAppointmentById(long id) {
+        if (appointmentRepository.findById(id).isPresent()) {
+            appointmentRepository.deleteById(id);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public Optional<Appointment> findById(long id) {
+        return appointmentRepository.findById(id);
     }
 }
