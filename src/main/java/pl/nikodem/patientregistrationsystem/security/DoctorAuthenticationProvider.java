@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.nikodem.patientregistrationsystem.doctor.DoctorService;
+import pl.nikodem.patientregistrationsystem.doctor.DoctorServiceImpl;
 
 @Component
 public class DoctorAuthenticationProvider implements AuthenticationProvider {

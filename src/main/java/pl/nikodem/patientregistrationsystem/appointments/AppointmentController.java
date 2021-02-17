@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.nikodem.patientregistrationsystem.doctor.Doctor;
-import pl.nikodem.patientregistrationsystem.doctor.DoctorService;
+import pl.nikodem.patientregistrationsystem.doctor.DoctorServiceImpl;
 import pl.nikodem.patientregistrationsystem.doctor.MeetingInterval;
 import pl.nikodem.patientregistrationsystem.exceptions.AppointmentTimeUnavailableException;
 import pl.nikodem.patientregistrationsystem.exceptions.DoctorNotFoundException;
@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 
 @RestController
 public class AppointmentController {
-    private final MeetingIntervalService meetingIntervalService;
-    private final AppointmentService appointmentService;
-    private final DoctorService doctorService;
+    private final MeetingIntervalServiceImpl meetingIntervalService;
+    private final AppointmentServiceImpl appointmentService;
+    private final DoctorServiceImpl doctorService;
     private final PatientService patientService;
 
     @Autowired
-    public AppointmentController(MeetingIntervalService meetingIntervalService, AppointmentService appointmentService, DoctorService doctorService, PatientService patientService) {
+    public AppointmentController(MeetingIntervalServiceImpl meetingIntervalService, AppointmentServiceImpl appointmentService, DoctorServiceImpl doctorService, PatientService patientService) {
         this.meetingIntervalService = meetingIntervalService;
         this.appointmentService = appointmentService;
         this.doctorService = doctorService;
