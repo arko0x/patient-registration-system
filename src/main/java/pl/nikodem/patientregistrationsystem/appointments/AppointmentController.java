@@ -12,6 +12,7 @@ import pl.nikodem.patientregistrationsystem.doctor.DoctorServiceImpl;
 import pl.nikodem.patientregistrationsystem.doctor.MeetingInterval;
 import pl.nikodem.patientregistrationsystem.exceptions.AppointmentTimeUnavailableException;
 import pl.nikodem.patientregistrationsystem.exceptions.DoctorNotFoundException;
+import pl.nikodem.patientregistrationsystem.exceptions.OperationForbiddenException;
 import pl.nikodem.patientregistrationsystem.exceptions.ResourceNotFoundException;
 import pl.nikodem.patientregistrationsystem.patient.Patient;
 import pl.nikodem.patientregistrationsystem.patient.PatientService;
@@ -43,6 +44,7 @@ public class AppointmentController {
                                                                  @RequestParam("size") int size,
                                                                  @RequestParam(name = "sort", required = false, defaultValue = "startTime") List<String> sortBy,
                                                                  @RequestParam(name = "desc", required = false, defaultValue = "false") boolean desc) throws ResourceNotFoundException {
+
         Page<MeetingInterval> resultPage = meetingIntervalService.getAllAvailableMeetingsInterval(date, page, size, Sort.by(sortBy.stream().map(!desc ? Sort.Order::asc : Sort.Order::desc).collect(Collectors.toList())));
         if (page >= resultPage.getTotalPages()) throw new ResourceNotFoundException("Page not found exception");
 
@@ -54,37 +56,27 @@ public class AppointmentController {
                                                          @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
                                                          @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime,
                                                          Principal principal,
-                                                         @RequestParam("doctor_id") long doctorId) {
-        Doctor doctor;
-        try {
-            doctor = doctorService.findById(doctorId);
-        } catch (DoctorNotFoundException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+                                                         @RequestParam("doctor_id") long doctorId) throws DoctorNotFoundException, AppointmentTimeUnavailableException {
 
+        Doctor doctor = doctorService.findById(doctorId);
         Patient patient = (Patient) patientService.loadUserByUsername(principal.getName());
-
         MeetingInterval meetingInterval = new MeetingInterval(date, startTime, endTime, doctor);
 
-        try {
-            Appointment appointment = appointmentService.addAppointmentAndDeleteMeetingInterval(doctor, patient, meetingInterval);
-            return new ResponseEntity<>(appointment, HttpStatus.CREATED);
-        } catch (AppointmentTimeUnavailableException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
+        Appointment appointment = appointmentService.addAppointmentAndDeleteMeetingInterval(doctor, patient, meetingInterval);
+
+        return new ResponseEntity<>(appointment, HttpStatus.CREATED);
+
     }
 
     @DeleteMapping("/doctor/deleteappointment")
-    public ResponseEntity<String> proceedDeletingAppointment(@RequestParam(name = "appointment_id") long id, Principal principal) {
+    public ResponseEntity<String> proceedDeletingAppointment(@RequestParam(name = "appointment_id") long id, Principal principal) throws ResourceNotFoundException, OperationForbiddenException {
         if (appointmentService.findById(id).isPresent() && !appointmentService.findById(id).get().getDoctor().getUsername().equals(principal.getName())) {
-            return new ResponseEntity<>("Operation forbidden", HttpStatus.FORBIDDEN);
+            throw new OperationForbiddenException("Operation forbidden. It is not appointment of user who sent delete request.");
         }
 
         if (appointmentService.deleteAppointmentById(id)) {
             return new ResponseEntity<>("Correctly deleted appointment", HttpStatus.ACCEPTED);
         }
-        else {
-            return new ResponseEntity<>("Appointment not exists", HttpStatus.NOT_FOUND);
-        }
+        else throw new ResourceNotFoundException("Appointment not found");
     }
 }

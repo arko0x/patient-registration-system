@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.nikodem.patientregistrationsystem.doctor.Doctor;
 import pl.nikodem.patientregistrationsystem.doctor.DoctorService;
-import pl.nikodem.patientregistrationsystem.doctor.DoctorServiceImpl;
 import pl.nikodem.patientregistrationsystem.email.EmailSender;
 import pl.nikodem.patientregistrationsystem.exceptions.*;
 import pl.nikodem.patientregistrationsystem.email.ConfirmationEmailGenerator;
@@ -72,16 +71,16 @@ public class DoctorRegistrationServiceImpl implements DoctorRegistrationService 
     public String confirmToken(String token) throws TokenNotFoundException, EmailAlreadyConfirmedException, TokenExpiredException {
         DoctorConfirmationToken confirmationToken = doctorConfirmationTokenService
                 .getToken(token)
-                .orElseThrow(() -> new TokenNotFoundException("Token not found"));
+                .orElseThrow(TokenNotFoundException::new);
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new EmailAlreadyConfirmedException("Email already confirmed");
+            throw new EmailAlreadyConfirmedException();
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiredAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new TokenExpiredException("Token expired");
+            throw new TokenExpiredException(expiredAt);
         }
 
         doctorConfirmationTokenService.setConfirmedAt(token);

@@ -30,7 +30,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             meetingIntervalRepository.deleteByStartTimeAndDoctor(meetingInterval.getStartTime(), doctor);
             return appointment;
         }
-        else throw new AppointmentTimeUnavailableException();
+        else throw new AppointmentTimeUnavailableException(LocalDateTime.of(meetingInterval.getDate(), meetingInterval.getStartTime()));
     }
 
     public boolean deleteAppointmentById(long id) {

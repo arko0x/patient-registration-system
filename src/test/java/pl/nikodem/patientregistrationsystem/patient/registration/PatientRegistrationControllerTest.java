@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.nikodem.patientregistrationsystem.exceptions.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -111,7 +112,7 @@ class PatientRegistrationControllerTest {
 
     @Test
     void givenConfirmTokenWhenTokenIsExpiredThenReturnExpectationFailedStatus() throws Exception {
-        doThrow(new TokenExpiredException()).when(patientRegistrationService).confirmToken(any(String.class));
+        doThrow(new TokenExpiredException(LocalDateTime.now())).when(patientRegistrationService).confirmToken(any(String.class));
         mockMvc.perform(get("/patient/register/confirm?token=sometoken"))
                 .andExpect(status().isExpectationFailed());
     }

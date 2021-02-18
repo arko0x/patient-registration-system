@@ -61,16 +61,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public String confirmToken(String token) throws TokenNotFoundException, EmailAlreadyConfirmedException, TokenExpiredException {
         PatientConfirmationToken confirmationToken = patientConfirmationTokenService
                 .getToken(token)
-                .orElseThrow(() -> new TokenNotFoundException("Token not found"));
+                .orElseThrow(TokenNotFoundException::new);
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new EmailAlreadyConfirmedException("Email already confirmed");
+            throw new EmailAlreadyConfirmedException();
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiredAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new TokenExpiredException("Token expired");
+            throw new TokenExpiredException(expiredAt);
         }
 
         patientConfirmationTokenService.setConfirmedAt(token);
