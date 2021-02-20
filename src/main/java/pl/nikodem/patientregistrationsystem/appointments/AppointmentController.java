@@ -38,7 +38,7 @@ public class AppointmentController {
         this.patientService = patientService;
     }
 
-    @GetMapping(params = {"page", "size", "date"}, path = "/patient/availablemeetings")
+    @GetMapping(params = {"page", "size", "date"}, path = "/patient/availableMeetings")
     public List<MeetingInterval> getAllAvailableMeetingIntervals(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                                                  @RequestParam("page") int page,
                                                                  @RequestParam("size") int size,
@@ -51,7 +51,7 @@ public class AppointmentController {
         return resultPage.getContent();
     }
 
-    @PostMapping("patient/createappointment")
+    @PostMapping("patient/appointment/create")
     public ResponseEntity<Appointment> createAppointment(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                                          @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
                                                          @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime,
@@ -68,8 +68,8 @@ public class AppointmentController {
 
     }
 
-    @DeleteMapping("/doctor/deleteappointment")
-    public ResponseEntity<String> proceedDeletingAppointment(@RequestParam(name = "appointment_id") long id, Principal principal) throws ResourceNotFoundException, OperationForbiddenException {
+    @DeleteMapping("/doctor/appointment/cancel")
+    public ResponseEntity<String> proceedCancellingAppointment(@RequestParam(name = "appointment_id") long id, Principal principal) throws ResourceNotFoundException, OperationForbiddenException {
         if (appointmentService.findById(id).isPresent() && !appointmentService.findById(id).get().getDoctor().getUsername().equals(principal.getName())) {
             throw new OperationForbiddenException("Operation forbidden. It is not appointment of user who sent delete request.");
         }
