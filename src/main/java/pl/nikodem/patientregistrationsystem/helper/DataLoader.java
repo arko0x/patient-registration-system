@@ -39,6 +39,9 @@ public class DataLoader implements ApplicationRunner {
     private List<Doctor> doctors = new ArrayList<>();
     private List<Patient> patients = new ArrayList<>();
 
+    private final static int AMOUNT_OF_APPOINTMENTS_TO_ADD = 15;
+    private final static int AMOUNT_OF_PEOPLE_TO_ADD = 10;
+
     @Autowired
     public DataLoader(DoctorRepository doctorRepository, PatientRepository patientRepository, SpecializationRepository specializationRepository, AppointmentRepository appointmentRepository, MeetingIntervalRepository meetingIntervalRepository, PasswordEncoder passwordEncoder) {
         this.doctorRepository = doctorRepository;
@@ -54,7 +57,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void addSomeDoctors() {
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < AMOUNT_OF_PEOPLE_TO_ADD; i++) {
             String name = names.get(new Random().nextInt(names.size()));
             String lastName = lastNames.get(new Random().nextInt(lastNames.size()));
             Doctor doctor = new Doctor(name + lastName + i,
@@ -78,7 +81,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void addSomePatients() {
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < AMOUNT_OF_PEOPLE_TO_ADD; i++) {
             String name = names.get(new Random().nextInt(names.size()));
             String lastName = lastNames.get(new Random().nextInt(lastNames.size()));
             Patient patient = new Patient(name + lastName + i + 20,
@@ -107,7 +110,7 @@ public class DataLoader implements ApplicationRunner {
                 LocalTime.of(13, 30), LocalTime.of(14, 0), LocalTime.of(14, 30), LocalTime.of(15, 0),
                 LocalTime.of(15, 30), LocalTime.of(16, 0), LocalTime.of(16, 30), LocalTime.of(17, 0));
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < AMOUNT_OF_APPOINTMENTS_TO_ADD; i++) {
             Doctor doctor = doctors.get(new Random().nextInt(doctors.size()));
             Patient patient = patients.get(new Random().nextInt(patients.size()));
             LocalDate date = dates.get(new Random().nextInt(dates.size()));
